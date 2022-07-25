@@ -70,7 +70,7 @@ export async function postCustomer(req, res) {
 }
 
 export async function updateCustomer(req, res) {
-    const {cpf} = req.body;
+    const {name, phone, cpf, birthday} = req.body;
     const {id} = req.params;
 
     if(isNaN(parseInt(id))) {
@@ -80,8 +80,25 @@ export async function updateCustomer(req, res) {
     try {
         const result = await db.query(`
             SELECT id FROM customers WHERE cpf = $1 AND id != $2
-        `, [cpf])
+        `, [cpf, id]);
+        if(result.rowCount > 0) {
+            return res.sendStatus(409);
+        }
+
+        await db.query(`
+            UPDATE customers 
+            SET 
+                name = $1,
+                phone = $2,
+                cpf = $3,
+                birthday = $4
+            WHERE id = $5        
+        `, [name, phone, cpf, birthday, id]);
+
+        res.sendStatus(200);
+
     } catch (error) {
-        
+        console.log(error);
+        res.sendStatus(500);
     }
 }
