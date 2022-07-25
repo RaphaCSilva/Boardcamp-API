@@ -9,7 +9,7 @@ export async function getGames(req, res) {
 
     if(name){
         params.push(`${name}%`)
-        pesquisa = `WHERE games.name ILIKE $${params.length}`;
+        pesquisa += `WHERE games.name ILIKE $${params.length}`;
     }
 
     try {
