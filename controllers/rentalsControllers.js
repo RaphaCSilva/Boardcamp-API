@@ -88,7 +88,29 @@ export async function updateRental(req, res) {
 }
 
 export async function deleteRental(req, res) { 
-    
+    const {id} = req.params;
+
+    try {
+        
+        const result = await db.query(`
+            SELECT * FROM rentals WHERE id = $1
+        `, [id]);
+        
+        if(result.rowCount === 0){
+            res.sendStatus(404);
+        } else {
+            const rental = result.rows[0];
+            if(!rental.returnDate) {
+                return res.sendStatus(400);
+            } else {
+                await db.query(`DELETE FROM rentals WHERE id = $1`, [id]);
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
 }
 
 function arrumaArray(row) {
