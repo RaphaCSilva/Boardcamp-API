@@ -1,8 +1,8 @@
-import categoriaSchema from "../schemas/categoriaSchema.js";
+import customerSchema from "../schemas/customerSchema.js";
 
 export function validaCustomer(req, res, next) {
-    const categoria = req.body;
-    const validation = categoriaSchema.validate(categoria);
+    const customer = req.body;
+    const validation = customerSchema.validate(customer);
     if(validation.error) {
         return res.sendStatus(400);
     }
